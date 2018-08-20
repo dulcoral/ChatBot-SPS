@@ -4,54 +4,63 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.israel.myapplication.Adapters.ChatAdapter;
-import com.example.israel.myapplication.Model.CardResponse;
-import com.example.israel.myapplication.Model.ChatBubble;
-import com.example.israel.myapplication.Model.QReply;
+import com.example.israel.myapplication.Presenter.Presenter;
+import com.example.israel.myapplication.Presenter.PresenterImpl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Presenter {
+    private EditText inputET;
+    ChatAdapter adapter;
+    RecyclerView recyclerView;
+    PresenterImpl presenter;
+    private ImageButton sendBtn;
     private ArrayList<Object> objects = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_View);
-        ChatAdapter adapter = new ChatAdapter(this, getObject(), false);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_View);
+        presenter = new PresenterImpl(this, this);
+        inputET = findViewById(R.id.et_msg_content);
+        sendBtn = findViewById(R.id.btn_chat_send);
+        initComponets();
+    }
+
+    private void initComponets() {
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String messageText = inputET.getText().toString();
+                if (messageText.equals("") || messageText.isEmpty()) {
+                    return;
+                }
+                inputET.setText(""); // clear message field
+                // disable send button until retrieve success from API
+                sendBtn.setClickable(false);
+                presenter.send(messageText);
+            }
+        });
+        adapter = new ChatAdapter(this, fromChat());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
-    private ArrayList<Object> getObject() {
-        objects.add(getChatDialog());
-        objects.add(getQReplies().get(0));
-        objects.add(getHorizontalData().get(0));
-        return objects;
+    public List<Object> fromChat() {
+        List<Object> mMessageList = new ArrayList<>();
+        return mMessageList;
     }
 
-    public static ChatBubble getChatDialog() {
-       ChatBubble singleVerticals = new ChatBubble("Jim Carrey", false);
-        return singleVerticals;
-    }
-
-    public static ArrayList<QReply> getQReplies() {
-        ArrayList<QReply> singleVerticals = new ArrayList<>();
-        singleVerticals.add(new QReply("Charlie Chaplin"));
-        singleVerticals.add(new QReply("Mr.Bean"));
-        singleVerticals.add(new QReply("Jim Carrey"));
-        return singleVerticals;
-    }
-
-    public static ArrayList<CardResponse> getHorizontalData() {
-        ArrayList<CardResponse> singleHorizontals = new ArrayList<>();
-        singleHorizontals.add(new CardResponse("dasd", "Charlie Chaplin", "Sir Charles Spencer \"Charlie\" Chaplin, KBE was an English comic actor,....", "2010/2/1"));
-        singleHorizontals.add(new CardResponse("bye", "Mr.Bean", "Mr. Bean is a British sitcom created by Rowan Atkinson and Richard Curtis, and starring Atkinson as the title character.", "2010/2/1"));
-        singleHorizontals.add(new CardResponse("hola", "Jim Carrey", "James Eugene \"Jim\" Carrey is a Canadian-American actor, comedian, impressionist, screenwriter...", "2010/2/1"));
-        return singleHorizontals;
+    public void updateChatResponse(Object response) {
+        adapter.add(response);
+        sendBtn.setClickable(true);
     }
 }

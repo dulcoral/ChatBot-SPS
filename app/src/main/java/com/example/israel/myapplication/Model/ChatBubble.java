@@ -5,9 +5,8 @@ public class ChatBubble {
     private String content;
     private boolean myMessage;
 
-    public ChatBubble(String content, boolean myMessage) {
+    public ChatBubble(String content) {
         this.content = content;
-        this.myMessage = myMessage;
     }
 
 public ChatBubble(){}

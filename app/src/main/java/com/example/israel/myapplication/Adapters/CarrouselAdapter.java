@@ -20,7 +20,11 @@ public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyVi
     ArrayList<CardResponse> carrousels = new ArrayList<>();
 
     public CarrouselAdapter(ArrayList<CardResponse> carrousels) {
-        this.carrousels = carrousels;
+        if (carrousels == null) {
+            this.carrousels = new ArrayList<CardResponse>();
+        } else {
+            this.carrousels = carrousels;
+        }
     }
 
     @Override
@@ -31,10 +35,9 @@ public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
-        holder.description.setText(carrousels.get(position).getDescription());
-       holder.title.setText(carrousels.get(position).getTitle());
-        holder.btn.setText(carrousels.get(position).getText_btn());
+       // holder.description.setText(carrousels.get(position).getDescription());
+      //  holder.title.setText(carrousels.get(position).getTitle());
+      //  holder.btn.setText(carrousels.get(position).getText_btn());
 
     }
 
