@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "344637107688",
+    "firebase_url": "https://loginsp-e1b91.firebaseio.com",
+    "project_id": "loginsp-e1b91",
+    "storage_bucket": "loginsp-e1b91.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344637107688:android:0efdc726a95a0a04",
+        "android_client_info": {
+          "package_name": "com.example.israel.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344637107688-ho1l8qfeloj97gbj3ks2q1ilu161oib8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCquV0jDTfRdoztXrpQwLZSAwwoAK6mL-I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/spsolutions"
     tools:context="com.example.israel.myapplication.MainActivity">
 
 
@@ -22,13 +23,6 @@
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/iv_msg_speech"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:src="@mipmap/ic_mic" />
-
         <EditText
             android:id="@+id/et_msg_content"
             android:layout_width="match_parent"
@@ -42,7 +36,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:background="@mipmap/ic_send" />
+            android:background="@drawable/ic_send_button" />
     </RelativeLayout>
 
 </RelativeLayout>
