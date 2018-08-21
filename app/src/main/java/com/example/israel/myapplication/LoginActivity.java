@@ -1,12 +1,15 @@
 package com.example.israel.myapplication;
 
 import android.app.ProgressDialog;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,11 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
-
-    private static final String TAG = "LoginActivity";
     private FirebaseAuth _auth;
+    private AnimationDrawable _animationDrawable;
+    private LinearLayout _linearLayout;
     private EditText _emailET;
-    private EditText _passwordET;
+    private TextInputLayout _passwordTIL;
     private Button _loginB;
     ProgressDialog progressDialog;
 
@@ -28,8 +31,9 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        _linearLayout = findViewById(R.id.linearLogin);
         _emailET = findViewById(R.id.input_email);
-        _passwordET = findViewById(R.id.input_password);
+        _passwordTIL = findViewById(R.id.input_password_layout);
         _loginB = findViewById(R.id.btn_login);
         _auth = FirebaseAuth.getInstance();
 
@@ -40,6 +44,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        _animationDrawable =(AnimationDrawable)_linearLayout.getBackground();
+        _animationDrawable.setEnterFadeDuration(3000);
+        _animationDrawable.setExitFadeDuration(1000);
+
     }
 
     @Override
@@ -49,10 +57,15 @@ public class LoginActivity extends AppCompatActivity {
         completeAuth(user);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        _animationDrawable.start();
+    }
 
     public void login() {
         String email = _emailET.getText().toString();
-        String password = _passwordET.getText().toString();
+        String password = _passwordTIL.getEditText().getText().toString();
 
         if (!validate(email, password)) {
             completeAuth(null);
@@ -76,10 +89,10 @@ public class LoginActivity extends AppCompatActivity {
             _emailET.setError(null);
         }
         if (password.isEmpty()) {
-            _passwordET.setError("El password debe existir");
+            _passwordTIL.setError("El password debe existir");
             valid = false;
         } else {
-            _passwordET.setError(null);
+            _passwordTIL.setError(null);
         }
         return valid;
     }

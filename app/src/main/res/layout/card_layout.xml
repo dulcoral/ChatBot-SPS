@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="Soy un texto largoo bla bla bla bla bla bla bla
 bla bla la bla"
-                android:textColor="#555"
+                android:textColor="#fff"
                 android:textSize="10sp" />
         </LinearLayout>
 

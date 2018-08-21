@@ -1,10 +1,14 @@
 package com.example.israel.myapplication;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -12,6 +16,7 @@ import android.widget.ImageButton;
 import com.example.israel.myapplication.Adapters.ChatAdapter;
 import com.example.israel.myapplication.Presenter.Presenter;
 import com.example.israel.myapplication.Presenter.PresenterImpl;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements Presenter {
     private EditText inputET;
     ChatAdapter adapter;
     RecyclerView recyclerView;
+    Toolbar toolbar;
     PresenterImpl presenter;
     private ImageButton sendBtn;
     private ArrayList<Object> objects = new ArrayList<>();
@@ -31,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements Presenter {
         setContentView(R.layout.activity_main);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setElevation(4);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_View);
         presenter = new PresenterImpl(this, this);
         inputET = findViewById(R.id.et_msg_content);
@@ -65,5 +75,26 @@ public class MainActivity extends AppCompatActivity implements Presenter {
     public void updateChatResponse(Object response) {
         adapter.add(response);
         sendBtn.setClickable(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                //Realizamos el cierre de sesion en firebase y volvemos al login
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
