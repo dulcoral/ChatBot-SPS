@@ -6,21 +6,21 @@
     android:orientation="horizontal">
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/benderluchonaft" />
+        android:layout_width="60dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/sampy" />
 
     <TextView
         android:id="@+id/txt_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/chat_bubble"
         android:backgroundTint="#7e7a7b"
         android:padding="8dp"
-        android:text="fdgfdgfdgdfgfhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkdgdfg"
+        android:text="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkdgdfg"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

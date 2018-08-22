@@ -22,14 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements Presenter {
+public class MainActivity extends AppCompatActivity implements Presenter.Chat {
     private EditText inputET;
     ChatAdapter adapter;
     RecyclerView recyclerView;
     Toolbar toolbar;
     PresenterImpl presenter;
     private ImageButton sendBtn;
-    private ArrayList<Object> objects = new ArrayList<>();
+    LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +63,29 @@ public class MainActivity extends AppCompatActivity implements Presenter {
             }
         });
         adapter = new ChatAdapter(this, fromChat());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        linearLayoutManager = new LinearLayoutManager(this);
+        //linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if (i3 < i7) {
+                    final int lastAdapterItem = adapter.getItemCount() - 1;
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            int recyclerViewPositionOffset = -1000000;
+                            View bottomView = linearLayoutManager.findViewByPosition(lastAdapterItem);
+                            if (bottomView != null) {
+                                recyclerViewPositionOffset = 0 - bottomView.getHeight();
+                            }
+                            linearLayoutManager.scrollToPositionWithOffset(lastAdapterItem, recyclerViewPositionOffset);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public List<Object> fromChat() {

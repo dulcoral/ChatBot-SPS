@@ -12,128 +12,120 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.israel.myapplication.Presenter.Presenter;
+import com.example.israel.myapplication.Presenter.PresenterLoginImpl;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity {
-    private FirebaseAuth _auth;
-    private AnimationDrawable _animationDrawable;
-    private LinearLayout _linearLayout;
-    private EditText _emailET;
-    private TextInputLayout _passwordTIL;
-    private Button _loginB;
+public class LoginActivity extends AppCompatActivity implements Presenter.Login {
+    private FirebaseAuth auth;
+    private AnimationDrawable animationDrawable;
+    private LinearLayout linearLayout;
+    private EditText emailET;
+    private TextInputLayout passwordTIL;
+    private Button loginB;
+    private PresenterLoginImpl presenter;
     ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        _linearLayout = findViewById(R.id.linearLogin);
-        _emailET = findViewById(R.id.input_email);
-        _passwordTIL = findViewById(R.id.input_password_layout);
-        _loginB = findViewById(R.id.btn_login);
-        _auth = FirebaseAuth.getInstance();
+        linearLayout = findViewById(R.id.linearLogin);
+        emailET = findViewById(R.id.input_email);
+        passwordTIL = findViewById(R.id.input_password_layout);
+        loginB = findViewById(R.id.btn_login);
+        initComponents();
+    }
 
-        _loginB.setOnClickListener(new View.OnClickListener() {
+    private void initComponents() {
+        auth = FirebaseAuth.getInstance();
+        presenter = new PresenterLoginImpl(this, this, auth);
+        loginB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
             }
         });
+        animationStart();
+    }
 
-        _animationDrawable =(AnimationDrawable)_linearLayout.getBackground();
-        _animationDrawable.setEnterFadeDuration(3000);
-        _animationDrawable.setExitFadeDuration(1000);
+    private void animationStart() {
+        animationDrawable = (AnimationDrawable) linearLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(3000);
+        animationDrawable.setExitFadeDuration(1000);
+    }
 
+    private void login() {
+        String email = emailET.getText().toString();
+        String password = passwordTIL.getEditText().getText().toString();
+        presenter.signIn(email, password);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        completeAuth(user);
+        presenter.completeAuth(user);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        _animationDrawable.start();
+        animationDrawable.start();
     }
 
-    public void login() {
-        String email = _emailET.getText().toString();
-        String password = _passwordTIL.getEditText().getText().toString();
+    @Override
+    public void disableInputs() {
+        passwordTIL.setEnabled(false);
+        emailET.setEnabled(false);
+        loginB.setEnabled(false);
+    }
 
-        if (!validate(email, password)) {
-            completeAuth(null);
-            return;
-        }
-
-        _loginB.setEnabled(false);
+    @Override
+    public void showProgress() {
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("Espere");
         progressDialog.show();
-        authentication(email, password);
     }
 
-
-    public boolean validate(String email, String password) {
-        boolean valid = true;
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailET.setError("Email Incorrecto");
-            valid = false;
-        } else {
-            _emailET.setError(null);
-        }
-        if (password.isEmpty()) {
-            _passwordTIL.setError("El password debe existir");
-            valid = false;
-        } else {
-            _passwordTIL.setError(null);
-        }
-        return valid;
+    @Override
+    public void enableInputs() {
+        passwordTIL.setEnabled(true);
+        emailET.setEnabled(true);
+        loginB.setEnabled(true);
     }
 
-
-    private void authentication(String email, String password) {
-        _auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            new android.os.Handler().postDelayed(
-                                    new Runnable() {
-                                        public void run() {
-                                            progressDialog.dismiss();
-                                            FirebaseUser user = _auth.getCurrentUser();
-                                            completeAuth(user);
-                                        }
-                                    }, 2000);
-
-                        } else {
-                            new android.os.Handler().postDelayed(
-                                    new Runnable() {
-                                        public void run() {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(getApplicationContext(),("Datos incorrectos"), Toast.LENGTH_LONG).show();
-                                            completeAuth(null);
-                                        }
-                                    }, 2000);
-                        }
-
-                    }
-                });
-
+    @Override
+    public void hideProgress() {
+        progressDialog.dismiss();
     }
 
-    private void completeAuth(FirebaseUser user) {
-        if (user != null) {
-            finish();
-        } else {
-            _loginB.setEnabled(true);
+    @Override
+    public void onLogin() {
+        finish();
+    }
+
+    @Override
+    public void onError(String error, int TYPE) {
+        switch (TYPE) {
+            case 1:
+                emailET.setError(error);
+                break;
+            case 2:
+                passwordTIL.setError(error);
+                break;
+            case 3:
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                break;
         }
     }
 
@@ -144,5 +136,4 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
-
 }

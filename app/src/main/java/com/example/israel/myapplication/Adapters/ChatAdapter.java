@@ -118,7 +118,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         }
 
         public void bind(ArrayList<CardResponse> cardResponses) {
-            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses);
+            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses,context);
             recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(adapter);
         }
