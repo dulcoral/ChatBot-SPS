@@ -1,8 +1,7 @@
-package com.example.israel.myapplication;
+package com.example.israel.myapplication.View;
 
 import android.app.ProgressDialog;
 import android.graphics.drawable.AnimationDrawable;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,9 +13,7 @@ import android.widget.Toast;
 
 import com.example.israel.myapplication.Presenter.Presenter;
 import com.example.israel.myapplication.Presenter.PresenterLoginImpl;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.israel.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

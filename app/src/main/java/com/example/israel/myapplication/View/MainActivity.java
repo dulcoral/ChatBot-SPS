@@ -1,6 +1,5 @@
-package com.example.israel.myapplication;
+package com.example.israel.myapplication.View;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +15,11 @@ import android.widget.ImageButton;
 import com.example.israel.myapplication.Adapters.ChatAdapter;
 import com.example.israel.myapplication.Presenter.Presenter;
 import com.example.israel.myapplication.Presenter.PresenterImpl;
+import com.example.israel.myapplication.R;
+import com.example.israel.myapplication.View.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +61,11 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
                 inputET.setText(""); // clear message field
                 // disable send button until retrieve success from API
                 sendBtn.setClickable(false);
-                presenter.send(messageText);
+                try {
+                    presenter.send(messageText);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             }
         });
         adapter = new ChatAdapter(this, fromChat());

@@ -1,5 +1,6 @@
 package com.example.israel.myapplication.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.QReply;
@@ -17,9 +19,11 @@ import java.util.ArrayList;
 public class QRepliesAdapter extends RecyclerView.Adapter<QRepliesAdapter.MyViewHolder> {
 
     ArrayList<QReply> qReplies = new ArrayList<>();
+    Context context;
 
-    public QRepliesAdapter(ArrayList<QReply> qReplies) {
+    public QRepliesAdapter(ArrayList<QReply> qReplies, Context context) {
         this.qReplies = qReplies;
+        this.context = context;
     }
 
     @Override
@@ -29,8 +33,14 @@ public class QRepliesAdapter extends RecyclerView.Adapter<QRepliesAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(QRepliesAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final QRepliesAdapter.MyViewHolder holder, int position) {
         holder.btn.setText(qReplies.get(position).getTitle_opc());
+        holder.btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context,holder.btn.getText().toString(),Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 

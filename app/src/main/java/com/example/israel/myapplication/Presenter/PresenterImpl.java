@@ -39,31 +39,21 @@ public class PresenterImpl {
         this.delegate = delegate;
     }
 
-    public void send(String input) {
+    public void send(String input) throws MalformedURLException {
         ChatBubble sendMessage = new ChatBubble();
         sendMessage.setContent(input);
         sendMessage.setMyMessage(false);
         delegate.updateChatResponse(sendMessage);
         ArrayList<Object> responses = new ArrayList<>();
-        if (input.toLowerCase().equals("hola")) {
+        if (input.toLowerCase().equals("d")) {
             responses.add(new CardResponse("dasd", "Charlie Chaplin", "Sir Charles Spencer was an English comic actor,....", "2010/2/1"));
             responses.add(new CardResponse("bye", "Mr.Bean", "Mr. Bean is a British sitcom created by Rowan Atkinson and Richard Curtis, and starring Atkinson as the title character.", "2010/2/1"));
             responses.add(new CardResponse("hola", "Jim Carrey", "James Eugene Carrey is a Canadian-American actor, comedian, impressionist, screenwriter...", "2010/2/1"));
             delegate.updateChatResponse(responses);
 
-        } else if (input.toLowerCase().equals("bye")) {
-            responses.add(new QReply("Charlie Chaplin"));
-            responses.add(new QReply("Mr.Bean"));
-            responses.add(new QReply("Jim Carrey"));
-            delegate.updateChatResponse(responses);
-
-        } else {
-            ChatBubble chatMessage = new ChatBubble();
-            chatMessage.setContent("hola");
-            chatMessage.setMyMessage(true);
-            delegate.updateChatResponse(chatMessage);
-
         }
+        consultarws(input);
+
     }
 
     public void onSucess() {
@@ -79,12 +69,8 @@ public class PresenterImpl {
     }
 
     public void consultarws(String comentario) throws MalformedURLException {
-        //String otherParametersUrServiceNeed =  "";
         String request = "http://chatbotsp.herokuapp.com/api/message";
         URL url = new URL(request);
-
-        //agrear comentario propio
-
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) url.openConnection();
@@ -108,7 +94,6 @@ public class PresenterImpl {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //wr.writeBytes(otherParametersUrServiceNeed);
 
         JSONObject jsonParam = new JSONObject();
         try {
@@ -117,7 +102,6 @@ public class PresenterImpl {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         try {
             wr.writeBytes(jsonParam.toString());
@@ -131,42 +115,38 @@ public class PresenterImpl {
             if (connection.getResponseCode() == 200) {
                 InputStream inputStream = new BufferedInputStream(connection.getInputStream());
                 BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder total = new StringBuilder();
-                String resuesta = r.readLine();
-                //Log.i("r.readLine=  ",resuesta.replace(",null",""));
-
+                String respuesta = r.readLine();
                 try {
-                    JSONArray jsonRes = new JSONArray(resuesta);
+                    JSONArray jsonRes = new JSONArray(respuesta);
                     JSONObject objJson = new JSONObject(jsonRes.get(0).toString());
-                    Log.i("jsonRes.get(0)=  ", objJson.toString());
                     JSONObject queryResult = new JSONObject(objJson.getString("queryResult"));
-                    Log.i("queryResult=  ", queryResult.toString());
-                    /*
                     JSONArray fulfillmentMessages = new JSONArray(queryResult.optJSONArray("fulfillmentMessages").toString());
-
                     JSONObject fulfillmentMessages1 = new JSONObject(fulfillmentMessages.get(0).toString());
-                    JSONObject fulfillmentMessages2 = new JSONObject(fulfillmentMessages.get(1).toString());
-                    JSONObject simpleResponses1= fulfillmentMessages1.getJSONObject("simpleResponses");
-                    Log.i("simpleResponses1=  ",simpleResponses1.toString());
-                    JSONObject suggestions1= fulfillmentMessages2.getJSONObject("suggestions");
-                    Log.i("suggestions1=  ",suggestions1.toString());
+                    if (fulfillmentMessages1.has("simpleResponses")) {
+                        JSONObject simpleResponses = fulfillmentMessages1.getJSONObject("simpleResponses");
+                        JSONArray simpleResponses1 = new JSONArray(simpleResponses.optJSONArray("simpleResponses").toString());
+                        JSONObject textToSpeech = new JSONObject(simpleResponses1.get(0).toString());
+                        ChatBubble chatMessage = new ChatBubble();
+                        chatMessage.setContent(textToSpeech.getString("textToSpeech"));
+                        chatMessage.setMyMessage(true);
+                        delegate.updateChatResponse(chatMessage);
+                    } else if (fulfillmentMessages1.has("listSelect")) {
+                        JSONObject btnResponse = fulfillmentMessages1.getJSONObject("listSelect");
+                        JSONArray items = new JSONArray(btnResponse.optJSONArray("items").toString());
+                        ChatBubble chatMessage = new ChatBubble();
+                        chatMessage.setContent(btnResponse.getString("title"));
+                        chatMessage.setMyMessage(true);
+                        delegate.updateChatResponse(chatMessage);
+                        ArrayList<Object> responses = new ArrayList<>();
+                        for (int i = 0; i < items.length(); i++) {
+                            JSONObject item = new JSONObject(items.get(i).toString());
+                            responses.add(new QReply(item.getString("title")));
+                        }
+                        delegate.updateChatResponse(responses);
 
-                    JSONArray simpleResponses2 = new JSONArray(simpleResponses1.optJSONArray("simpleResponses").toString());
-                    Log.i("simpleResponses2=  ",simpleResponses2.get(0).toString());
-                    JSONArray suggestions2 = new JSONArray(suggestions1.optJSONArray("suggestions").toString());
-                    for (int i=0; i<suggestions2.length(); i++){
-                        JSONObject boton = new JSONObject(suggestions2.get(i).toString());
-                        Log.i("titulos boton   ",boton.getString("title"));
                     }
-                    JSONObject textToSpeech = new JSONObject(simpleResponses2.get(0).toString());
-                    Log.i("textToSpeech=  ",textToSpeech.getString("textToSpeech"));
-                    */
-
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.i("error parse json ", e.toString());
                 }
 
             }
@@ -174,7 +154,6 @@ public class PresenterImpl {
             e.printStackTrace();
         }
     }
-
 
 
 }
