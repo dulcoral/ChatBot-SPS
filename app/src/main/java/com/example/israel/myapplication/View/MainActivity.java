@@ -68,30 +68,11 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
                 }
             }
         });
-        adapter = new ChatAdapter(this, fromChat());
+        adapter = new ChatAdapter(this, fromChat(),presenter);
         linearLayoutManager = new LinearLayoutManager(this);
         //linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if (i3 < i7) {
-                    final int lastAdapterItem = adapter.getItemCount() - 1;
-                    recyclerView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int recyclerViewPositionOffset = -1000000;
-                            View bottomView = linearLayoutManager.findViewByPosition(lastAdapterItem);
-                            if (bottomView != null) {
-                                recyclerViewPositionOffset = 0 - bottomView.getHeight();
-                            }
-                            linearLayoutManager.scrollToPositionWithOffset(lastAdapterItem, recyclerViewPositionOffset);
-                        }
-                    });
-                }
-            }
-        });
     }
 
     public List<Object> fromChat() {
