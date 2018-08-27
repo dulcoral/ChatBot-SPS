@@ -1,6 +1,7 @@
 package com.example.israel.myapplication.Adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,15 @@ import java.util.ArrayList;
 public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyViewHolder> {
 
     ArrayList<CardResponse> carrousels = new ArrayList<>();
+    Context context;
 
-    public CarrouselAdapter(ArrayList<CardResponse> carrousels) {
+    public CarrouselAdapter(ArrayList<CardResponse> carrousels, Context context) {
         if (carrousels == null) {
             this.carrousels = new ArrayList<CardResponse>();
         } else {
             this.carrousels = carrousels;
         }
+        this.context = context;
     }
 
     @Override
@@ -35,9 +38,13 @@ public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-       // holder.description.setText(carrousels.get(position).getDescription());
-      //  holder.title.setText(carrousels.get(position).getTitle());
-      //  holder.btn.setText(carrousels.get(position).getText_btn());
+        holder.description.setText(carrousels.get(position).getDescription());
+        holder.title.setText(carrousels.get(position).getTitle());
+        holder.btn.setText(carrousels.get(position).getText_btn());
+
+        Glide.with(context)
+                .load(carrousels.get(position).getUrl_img())
+                .into(holder.image);
 
     }
 
