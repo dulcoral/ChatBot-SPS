@@ -22,14 +22,14 @@ public class PresenterLoginImpl {
     }
 
     public void signIn(String email, String password) {
-        if (delegate != null) {
-            delegate.disableInputs();
-            delegate.showProgress();
-        }
         if (!validate(email, password)) {
             completeAuth(null);
             return;
         } else {
+            if (delegate != null) {
+                delegate.disableInputs();
+                delegate.showProgress();
+            }
             authentication(email, password);
         }
     }
@@ -74,6 +74,7 @@ public class PresenterLoginImpl {
                                     new Runnable() {
                                         public void run() {
                                             delegate.onError("Datos incorrectos", 3);
+                                            delegate.hideProgress();
                                             completeAuth(null);
                                         }
                                     }, 2000);

@@ -12,18 +12,23 @@ import android.widget.Toast;
 
 import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.QReply;
+import com.example.israel.myapplication.Presenter.Presenter;
+import com.example.israel.myapplication.Presenter.PresenterImpl;
 import com.example.israel.myapplication.R;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class QRepliesAdapter extends RecyclerView.Adapter<QRepliesAdapter.MyViewHolder> {
 
     ArrayList<QReply> qReplies = new ArrayList<>();
     Context context;
+    PresenterImpl presenter;
 
-    public QRepliesAdapter(ArrayList<QReply> qReplies, Context context) {
+    public QRepliesAdapter(ArrayList<QReply> qReplies, Context context, PresenterImpl presenter) {
         this.qReplies = qReplies;
         this.context = context;
+        this.presenter = presenter;
     }
 
     @Override
@@ -38,7 +43,11 @@ public class QRepliesAdapter extends RecyclerView.Adapter<QRepliesAdapter.MyView
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,holder.btn.getText().toString(),Toast.LENGTH_LONG).show();
+                try {
+                    presenter.consultarws(holder.btn.getText().toString());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

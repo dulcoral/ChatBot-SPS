@@ -122,6 +122,7 @@ public class PresenterImpl {
                     JSONObject queryResult = new JSONObject(objJson.getString("queryResult"));
                     JSONArray fulfillmentMessages = new JSONArray(queryResult.optJSONArray("fulfillmentMessages").toString());
                     JSONObject fulfillmentMessages1 = new JSONObject(fulfillmentMessages.get(0).toString());
+                    //simpleresponses
                     if (fulfillmentMessages1.has("simpleResponses")) {
                         JSONObject simpleResponses = fulfillmentMessages1.getJSONObject("simpleResponses");
                         JSONArray simpleResponses1 = new JSONArray(simpleResponses.optJSONArray("simpleResponses").toString());
@@ -130,7 +131,7 @@ public class PresenterImpl {
                         chatMessage.setContent(textToSpeech.getString("textToSpeech"));
                         chatMessage.setMyMessage(true);
                         delegate.updateChatResponse(chatMessage);
-                    } else if (fulfillmentMessages1.has("listSelect")) {
+                    } else if (fulfillmentMessages1.has("listSelect")) { //listButtons
                         JSONObject btnResponse = fulfillmentMessages1.getJSONObject("listSelect");
                         JSONArray items = new JSONArray(btnResponse.optJSONArray("items").toString());
                         ChatBubble chatMessage = new ChatBubble();
@@ -143,8 +144,8 @@ public class PresenterImpl {
                             responses.add(new QReply(item.getString("title")));
                         }
                         delegate.updateChatResponse(responses);
-
                     }
+                    //
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

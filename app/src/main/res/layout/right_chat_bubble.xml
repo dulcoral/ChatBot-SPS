@@ -9,18 +9,12 @@
         android:id="@+id/txt_msg"
         android:layout_width="wrap_content"
         android:layout_marginLeft="50dp"
+        android:layout_marginRight="3dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/chat_bubble"
         android:padding="8dp"
         android:text="fdgfdgfdgdfgfjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjdgdfg"
         android:textColor="@android:color/white" />
-
-    <android.support.v7.widget.AppCompatImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/benderluchonaft" />
 
 </LinearLayout>

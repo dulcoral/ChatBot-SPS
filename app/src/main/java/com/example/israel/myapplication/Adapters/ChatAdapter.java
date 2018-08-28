@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.israel.myapplication.Model.ChatBubble;
 import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.QReply;
+import com.example.israel.myapplication.Presenter.PresenterImpl;
 import com.example.israel.myapplication.R;
 
 import java.util.ArrayList;
@@ -21,13 +22,15 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<Object> items;
+    private PresenterImpl presenter;
     private final int MESSAGESEND = 0;
     private final int SIMPLEMESSAGE = 1;
     private final int CARROUSEL = 2;
     private final int BTN = 3;
 
-    public ChatAdapter(Context context, List<Object> items) {
+    public ChatAdapter(Context context, List<Object> items, PresenterImpl presenter) {
         this.context = context;
+        this.presenter = presenter;
         if (items == null) {
             this.items = new ArrayList<Object>();
         } else {
@@ -118,7 +121,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         }
 
         public void bind(ArrayList<CardResponse> cardResponses) {
-            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses,context);
+            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses, context);
             recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(adapter);
         }
@@ -148,7 +151,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         }
 
         public void bind(ArrayList<QReply> qReplies) {
-            QRepliesAdapter adapter = new QRepliesAdapter(qReplies,context);
+            QRepliesAdapter adapter = new QRepliesAdapter(qReplies, context, presenter);
             recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(adapter);
         }
