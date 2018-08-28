@@ -1,6 +1,5 @@
 package com.example.israel.myapplication.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,12 +17,12 @@ import java.util.ArrayList;
 
 public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyViewHolder> {
 
-    ArrayList<CardResponse> carrousels = new ArrayList<>();
+    ArrayList<CardResponse> carrousels;
     Context context;
 
     public CarrouselAdapter(ArrayList<CardResponse> carrousels, Context context) {
         if (carrousels == null) {
-            this.carrousels = new ArrayList<CardResponse>();
+            this.carrousels = new ArrayList<>();
         } else {
             this.carrousels = carrousels;
         }
@@ -41,7 +40,6 @@ public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyVi
         holder.description.setText(carrousels.get(position).getDescription());
         holder.title.setText(carrousels.get(position).getTitle());
         holder.btn.setText(carrousels.get(position).getText_btn());
-
         Glide.with(context)
                 .load(carrousels.get(position).getUrl_img())
                 .into(holder.image);

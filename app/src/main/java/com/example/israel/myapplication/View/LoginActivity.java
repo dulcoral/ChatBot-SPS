@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity implements Presenter.Login 
     @Override
     public void showProgress() {
         progressDialog = new ProgressDialog(LoginActivity.this);
-        progressDialog.setMessage("Espere");
+        progressDialog.setMessage(getBaseContext().getResources().getString(R.string.wait));
         progressDialog.show();
     }
 

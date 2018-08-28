@@ -2,8 +2,8 @@ package com.example.israel.myapplication.Presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
+import com.example.israel.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,11 +36,11 @@ public class PresenterLoginImpl {
 
     private boolean validate(String email, String password) {
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            delegate.onError("Email Incorrecto", 1);
+            delegate.onError(context.getResources().getString(R.string.emailError), 1);
             return false;
         }
         if (password.isEmpty()) {
-            delegate.onError("Verifique su password", 2);
+            delegate.onError(context.getResources().getString(R.string.passwordError), 2);
             return false;
         }
         return true;
@@ -73,7 +73,7 @@ public class PresenterLoginImpl {
                             new android.os.Handler().postDelayed(
                                     new Runnable() {
                                         public void run() {
-                                            delegate.onError("Datos incorrectos", 3);
+                                            delegate.onError(context.getResources().getString(R.string.errorLogin), 3);
                                             delegate.hideProgress();
                                             completeAuth(null);
                                         }

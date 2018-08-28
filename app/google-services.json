@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "344637107688",
-    "firebase_url": "https://loginsp-e1b91.firebaseio.com",
-    "project_id": "loginsp-e1b91",
-    "storage_bucket": "loginsp-e1b91.appspot.com"
+    "project_number": "826655910478",
+    "firebase_url": "https://sampy-e90f6.firebaseio.com",
+    "project_id": "sampy-e90f6",
+    "storage_bucket": "sampy-e90f6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:344637107688:android:0efdc726a95a0a04",
+        "mobilesdk_app_id": "1:826655910478:android:0efdc726a95a0a04",
         "android_client_info": {
           "package_name": "com.example.israel.myapplication"
         }
       },
       "oauth_client": [
         {
-          "client_id": "344637107688-ho1l8qfeloj97gbj3ks2q1ilu161oib8.apps.googleusercontent.com",
+          "client_id": "826655910478-8q5k2dddt1dsuv025g6h1vc5481ug61d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.israel.myapplication",
+            "certificate_hash": "13eb9f50f8a034fc7542b6c34cf31a29879f9c6b"
+          }
+        },
+        {
+          "client_id": "826655910478-i4sqgjq3teeql91n08ttgpr0ub8qcu9j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCquV0jDTfRdoztXrpQwLZSAwwoAK6mL-I"
+          "current_key": "AIzaSyCBPsQHi7CFsXEKJFclrEamOJ21-0Sf8_w"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826655910478-i4sqgjq3teeql91n08ttgpr0ub8qcu9j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
