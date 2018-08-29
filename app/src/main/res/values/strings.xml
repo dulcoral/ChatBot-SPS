@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Sampy</string>
+
+    <!-- Login -->
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="signIn">Ingresar</string>
+    <string name="wait">Espere</string>
+    <string name="emailError">Email Incorrecto</string>
+    <string name="passwordError">Verifique su password</string>
+    <string name="errorLogin">Datos incorrectos</string>
+    <!-- ChatRoom -->
+    <string name="hintWriteHere">Escribe tu mensaje aquí </string>
+    <string name="request">http://chatbotsp.herokuapp.com/api/message</string>
+</resources>
