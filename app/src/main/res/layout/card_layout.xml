@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="200dp"
-    android:layout_height="wrap_content"
+    android:layout_height="210dp"
     android:layout_margin="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/img_Card"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/benderluchonaft" />
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
-                android:text="Soy un título"
+                android:layout_marginTop="10dp"
                 android:textColor="#000"
                 android:textSize="14sp" />
 
@@ -35,8 +34,7 @@
                 android:id="@+id/text_Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Soy un texto largoo bla bla bla bla bla bla bla
-bla bla la bla"
+                android:layout_marginRight="8dp"
                 android:textColor="#fff"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -44,13 +42,12 @@ bla bla la bla"
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right">
+            android:layout_gravity="right|bottom">
 
             <Button
                 android:id="@+id/btn_Card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Botón"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

@@ -1,18 +1,12 @@
 package com.example.israel.myapplication.Presenter;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.Toast;;
+
 import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.ChatBubble;
 import com.example.israel.myapplication.Model.QReply;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.israel.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,32 +38,11 @@ public class PresenterImpl {
         sendMessage.setContent(input);
         sendMessage.setMyMessage(false);
         delegate.updateChatResponse(sendMessage);
-        ArrayList<Object> responses = new ArrayList<>();
-        if (input.toLowerCase().equals("d")) {
-            responses.add(new CardResponse("dasd", "Charlie Chaplin", "Sir Charles Spencer was an English comic actor,....", "2010/2/1"));
-            responses.add(new CardResponse("bye", "Mr.Bean", "Mr. Bean is a British sitcom created by Rowan Atkinson and Richard Curtis, and starring Atkinson as the title character.", "2010/2/1"));
-            responses.add(new CardResponse("hola", "Jim Carrey", "James Eugene Carrey is a Canadian-American actor, comedian, impressionist, screenwriter...", "2010/2/1"));
-            delegate.updateChatResponse(responses);
-
-        }
         consultarws(input);
-
-    }
-
-    public void onSucess() {
-        if (delegate != null) {
-
-        }
-    }
-
-    public void onError(String error) {
-        if (delegate != null) {
-
-        }
     }
 
     public void consultarws(String comentario) throws MalformedURLException {
-        String request = "http://chatbotsp.herokuapp.com/api/message";
+        String request = context.getResources().getString(R.string.request);
         URL url = new URL(request);
         HttpURLConnection connection = null;
         try {
@@ -121,31 +94,45 @@ public class PresenterImpl {
                     JSONObject objJson = new JSONObject(jsonRes.get(0).toString());
                     JSONObject queryResult = new JSONObject(objJson.getString("queryResult"));
                     JSONArray fulfillmentMessages = new JSONArray(queryResult.optJSONArray("fulfillmentMessages").toString());
-                    JSONObject fulfillmentMessages1 = new JSONObject(fulfillmentMessages.get(0).toString());
-                    //simpleresponses
-                    if (fulfillmentMessages1.has("simpleResponses")) {
-                        JSONObject simpleResponses = fulfillmentMessages1.getJSONObject("simpleResponses");
-                        JSONArray simpleResponses1 = new JSONArray(simpleResponses.optJSONArray("simpleResponses").toString());
-                        JSONObject textToSpeech = new JSONObject(simpleResponses1.get(0).toString());
-                        ChatBubble chatMessage = new ChatBubble();
-                        chatMessage.setContent(textToSpeech.getString("textToSpeech"));
-                        chatMessage.setMyMessage(true);
-                        delegate.updateChatResponse(chatMessage);
-                    } else if (fulfillmentMessages1.has("listSelect")) { //listButtons
-                        JSONObject btnResponse = fulfillmentMessages1.getJSONObject("listSelect");
-                        JSONArray items = new JSONArray(btnResponse.optJSONArray("items").toString());
-                        ChatBubble chatMessage = new ChatBubble();
-                        chatMessage.setContent(btnResponse.getString("title"));
-                        chatMessage.setMyMessage(true);
-                        delegate.updateChatResponse(chatMessage);
-                        ArrayList<Object> responses = new ArrayList<>();
-                        for (int i = 0; i < items.length(); i++) {
-                            JSONObject item = new JSONObject(items.get(i).toString());
-                            responses.add(new QReply(item.getString("title")));
+                    for (int i = 0; i < fulfillmentMessages.length(); i++) {
+                        JSONObject fulfillmentMessages1 = new JSONObject(fulfillmentMessages.get(i).toString());
+                        //SimpleResponses
+                        if (fulfillmentMessages1.has("simpleResponses")) {
+                            JSONObject simpleResponses = fulfillmentMessages1.getJSONObject("simpleResponses");
+                            JSONArray simpleResponses1 = new JSONArray(simpleResponses.optJSONArray("simpleResponses").toString());
+                            JSONObject textToSpeech = new JSONObject(simpleResponses1.get(0).toString());
+                            ChatBubble chatMessage = new ChatBubble();
+                            chatMessage.setContent(textToSpeech.getString("textToSpeech"));
+                            chatMessage.setMyMessage(true);
+                            delegate.updateChatResponse(chatMessage);
                         }
-                        delegate.updateChatResponse(responses);
+                        //QuickResponses
+                        else if (fulfillmentMessages1.has("listSelect")) { //listButtons
+                            JSONObject btnResponse = fulfillmentMessages1.getJSONObject("listSelect");
+                            JSONArray items = new JSONArray(btnResponse.optJSONArray("items").toString());
+                            ChatBubble chatMessage = new ChatBubble();
+                            chatMessage.setContent(btnResponse.getString("title"));
+                            chatMessage.setMyMessage(true);
+                            delegate.updateChatResponse(chatMessage);
+                            ArrayList<Object> responses = new ArrayList<>();
+                            for (int j = 0; j < items.length(); j++) {
+                                JSONObject item = new JSONObject(items.get(j).toString());
+                                responses.add(new QReply(item.getString("title")));
+                            }
+                            delegate.updateChatResponse(responses);
+                        }
+                        //CarrouselResponses
+                        else if (fulfillmentMessages1.has("carouselSelect")) {
+                            JSONObject btnResponse = fulfillmentMessages1.getJSONObject("carouselSelect");
+                            JSONArray items = new JSONArray(btnResponse.optJSONArray("items").toString());
+                            ArrayList<Object> responses = new ArrayList<>();
+                            for (int j = 0; j < items.length(); j++) {
+                                JSONObject item = new JSONObject(items.get(j).toString());
+                                responses.add(new CardResponse(item.getString("title"), item.getJSONObject("image").getString("imageUri"), item.getString("description"), "seleccionar"));
+                            }
+                            delegate.updateChatResponse(responses);
+                        }
                     }
-                    //
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

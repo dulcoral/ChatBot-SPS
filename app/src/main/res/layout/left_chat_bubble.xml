@@ -20,7 +20,6 @@
         android:background="@drawable/chat_bubble"
         android:backgroundTint="#7e7a7b"
         android:padding="8dp"
-        android:text="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkdgdfg"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

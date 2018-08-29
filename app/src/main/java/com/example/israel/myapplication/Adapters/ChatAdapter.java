@@ -32,7 +32,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         this.context = context;
         this.presenter = presenter;
         if (items == null) {
-            this.items = new ArrayList<Object>();
+            this.items = new ArrayList<>();
         } else {
             this.items = items;
         }

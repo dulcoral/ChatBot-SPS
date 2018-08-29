@@ -50,7 +50,7 @@
                     style="@style/StyledTilEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Correo electrónico"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:textColor="@android:color/white"
                     android:textColorHint="#b6b0b1" />
@@ -84,7 +84,7 @@
                     style="@style/StyledTilEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Contraseña"
+                    android:hint="@string/password"
                     android:inputType="textPassword"
                     android:textColor="@android:color/white"
                     android:textColorHint="#b6b0b1" />
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rectangle"
-            android:text="Ingresar"
+            android:text="@string/signIn"
             android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

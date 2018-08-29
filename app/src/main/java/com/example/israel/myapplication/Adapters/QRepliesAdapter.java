@@ -6,13 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.QReply;
-import com.example.israel.myapplication.Presenter.Presenter;
 import com.example.israel.myapplication.Presenter.PresenterImpl;
 import com.example.israel.myapplication.R;
 
@@ -21,7 +16,7 @@ import java.util.ArrayList;
 
 public class QRepliesAdapter extends RecyclerView.Adapter<QRepliesAdapter.MyViewHolder> {
 
-    ArrayList<QReply> qReplies = new ArrayList<>();
+    ArrayList<QReply> qReplies;
     Context context;
     PresenterImpl presenter;
 

@@ -16,7 +16,6 @@ import com.example.israel.myapplication.Adapters.ChatAdapter;
 import com.example.israel.myapplication.Presenter.Presenter;
 import com.example.israel.myapplication.Presenter.PresenterImpl;
 import com.example.israel.myapplication.R;
-import com.example.israel.myapplication.View.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.net.MalformedURLException;
@@ -70,7 +69,14 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
         });
         adapter = new ChatAdapter(this, fromChat(),presenter);
         linearLayoutManager = new LinearLayoutManager(this);
-        //linearLayoutManager.setStackFromEnd(true);
+       // linearLayoutManager.setStackFromEnd(true);
+       // recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+            }
+        }, 300);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
     }
