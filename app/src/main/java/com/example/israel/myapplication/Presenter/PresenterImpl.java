@@ -1,6 +1,8 @@
 package com.example.israel.myapplication.Presenter;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.StrictMode;
 
 import com.example.israel.myapplication.Model.CardResponse;
@@ -33,12 +35,23 @@ public class PresenterImpl {
         this.delegate = delegate;
     }
 
-    public void send(String input) throws MalformedURLException {
-        ChatBubble sendMessage = new ChatBubble();
-        sendMessage.setContent(input);
-        sendMessage.setMyMessage(false);
-        delegate.updateChatResponse(sendMessage);
-        consultarws(input);
+    public void sendMessage(String input) {
+        simpleResponse(input, false);
+        simpleResponse("...", true);
+        if (isOnline(context))
+            sendRequest(input);
+        else{
+            delegate.deleteWait();
+            simpleResponse(context.getResources().getString(R.string.conexion), true);
+        }
+    }
+
+    public void sendRequest(String input) {
+        try {
+            consultarws(input);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void consultarws(String comentario) throws MalformedURLException {
@@ -83,9 +96,14 @@ public class PresenterImpl {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        callBack(connection);
 
+    }
+
+    private void callBack(HttpURLConnection connection) {
         try {
             if (connection.getResponseCode() == 200) {
+                delegate.deleteWait();
                 InputStream inputStream = new BufferedInputStream(connection.getInputStream());
                 BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
                 String respuesta = r.readLine();
@@ -101,19 +119,13 @@ public class PresenterImpl {
                             JSONObject simpleResponses = fulfillmentMessages1.getJSONObject("simpleResponses");
                             JSONArray simpleResponses1 = new JSONArray(simpleResponses.optJSONArray("simpleResponses").toString());
                             JSONObject textToSpeech = new JSONObject(simpleResponses1.get(0).toString());
-                            ChatBubble chatMessage = new ChatBubble();
-                            chatMessage.setContent(textToSpeech.getString("textToSpeech"));
-                            chatMessage.setMyMessage(true);
-                            delegate.updateChatResponse(chatMessage);
+                            simpleResponse(textToSpeech.getString("textToSpeech"), true);
                         }
                         //QuickResponses
-                        else if (fulfillmentMessages1.has("listSelect")) { //listButtons
+                        else if (fulfillmentMessages1.has("listSelect")) {
                             JSONObject btnResponse = fulfillmentMessages1.getJSONObject("listSelect");
                             JSONArray items = new JSONArray(btnResponse.optJSONArray("items").toString());
-                            ChatBubble chatMessage = new ChatBubble();
-                            chatMessage.setContent(btnResponse.getString("title"));
-                            chatMessage.setMyMessage(true);
-                            delegate.updateChatResponse(chatMessage);
+                            simpleResponse(btnResponse.getString("title"), true);
                             ArrayList<Object> responses = new ArrayList<>();
                             for (int j = 0; j < items.length(); j++) {
                                 JSONObject item = new JSONObject(items.get(j).toString());
@@ -143,5 +155,16 @@ public class PresenterImpl {
         }
     }
 
+    public void simpleResponse(String message, boolean myMessage) {
+        ChatBubble chatMessage = new ChatBubble();
+        chatMessage.setContent(message);
+        chatMessage.setMyMessage(myMessage);
+        delegate.updateChatResponse(chatMessage);
+    }
 
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
+    }
 }

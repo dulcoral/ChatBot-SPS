@@ -43,6 +43,10 @@ public class ChatAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    public void remove(){
+        items.remove(getItemCount()-1);
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -121,7 +125,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         }
 
         public void bind(ArrayList<CardResponse> cardResponses) {
-            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses, context);
+            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses, context,presenter);
             recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(adapter);
         }

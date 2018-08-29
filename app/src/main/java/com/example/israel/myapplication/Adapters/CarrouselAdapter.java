@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.israel.myapplication.Model.CardResponse;
+import com.example.israel.myapplication.Presenter.PresenterImpl;
 import com.example.israel.myapplication.R;
 
 import java.util.ArrayList;
@@ -19,14 +20,16 @@ public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyVi
 
     ArrayList<CardResponse> carrousels;
     Context context;
+    PresenterImpl presenter;
 
-    public CarrouselAdapter(ArrayList<CardResponse> carrousels, Context context) {
+    public CarrouselAdapter(ArrayList<CardResponse> carrousels, Context context, PresenterImpl presenter) {
         if (carrousels == null) {
             this.carrousels = new ArrayList<>();
         } else {
             this.carrousels = carrousels;
         }
         this.context = context;
+        this.presenter = presenter;
     }
 
     @Override
@@ -36,10 +39,16 @@ public class CarrouselAdapter extends RecyclerView.Adapter<CarrouselAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.description.setText(carrousels.get(position).getDescription());
         holder.title.setText(carrousels.get(position).getTitle());
         holder.btn.setText(carrousels.get(position).getText_btn());
+        holder.btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.sendMessage(holder.title.getText().toString());
+            }
+        });
         Glide.with(context)
                 .load(carrousels.get(position).getUrl_img())
                 .into(holder.image);

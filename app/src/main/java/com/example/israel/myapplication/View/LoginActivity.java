@@ -1,6 +1,7 @@
 package com.example.israel.myapplication.View;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -108,7 +109,8 @@ public class LoginActivity extends AppCompatActivity implements Presenter.Login 
 
     @Override
     public void onLogin() {
-        finish();
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
