@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
                 recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
             }
         }, 100);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         //linearLayoutManager.setStackFromEnd(true);

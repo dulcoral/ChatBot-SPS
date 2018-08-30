@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.ChatBubble;
 import com.example.israel.myapplication.Model.QReply;
+import com.example.israel.myapplication.Model.VideoResponse;
 import com.example.israel.myapplication.R;
 
 import org.json.JSONArray;
@@ -40,7 +41,7 @@ public class PresenterImpl {
         simpleResponse("...", true);
         if (isOnline(context))
             sendRequest(input);
-        else{
+        else {
             delegate.deleteWait();
             simpleResponse(context.getResources().getString(R.string.conexion), true);
         }
@@ -132,6 +133,16 @@ public class PresenterImpl {
                                 responses.add(new QReply(item.getString("title")));
                             }
                             delegate.updateChatResponse(responses);
+                        } else if (fulfillmentMessages1.has("suggestions")) {
+                            JSONObject suggestions = fulfillmentMessages1.getJSONObject("suggestions");
+                            JSONArray suggestionsArray = suggestions.getJSONArray("suggestions");
+                            ArrayList<Object> responses = new ArrayList<>();
+                            for (int k = 0; k < suggestionsArray.length(); k++) {
+                                JSONObject suggestion = new JSONObject(suggestionsArray.get(k).toString());
+                                responses.add(new QReply(suggestion.getString("title")));
+                                //simpleResponse(suggestion.getString("title"),true);
+                            }
+                            delegate.updateChatResponse(responses);
                         }
                         //CarrouselResponses
                         else if (fulfillmentMessages1.has("carouselSelect")) {
@@ -143,6 +154,17 @@ public class PresenterImpl {
                                 responses.add(new CardResponse(item.getString("title"), item.getJSONObject("image").getString("imageUri"), item.getString("description"), "seleccionar"));
                             }
                             delegate.updateChatResponse(responses);
+                        }
+                        //videoResponse
+                        else if (fulfillmentMessages1.has("linkOutSuggestion")) {
+                            JSONObject linkResponse = fulfillmentMessages1.getJSONObject("linkOutSuggestion");
+                            String respons = linkResponse.getString("destinationName");
+                            String link = linkResponse.getString("uri");
+                            String videoLink = "<iframe width=\"100%\" height=\"80%\" src=" + "\"" + link + "\"" + " frameborder=\"0\" allowfullscreen></iframe>";
+                            simpleResponse(respons, true);
+                            VideoResponse videoResponse = new VideoResponse();
+                            videoResponse.setVideoUrl("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/Mx-XKLL6iY0\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>");
+                            delegate.updateChatResponse(videoResponse);
                         }
                     }
                 } catch (JSONException e) {
