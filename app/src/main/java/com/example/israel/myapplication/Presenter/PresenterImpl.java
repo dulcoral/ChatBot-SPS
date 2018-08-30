@@ -1,11 +1,14 @@
 package com.example.israel.myapplication.Presenter;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.StrictMode;
 
 import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.ChatBubble;
 import com.example.israel.myapplication.Model.QReply;
+import com.example.israel.myapplication.Model.VideoResponse;
 import com.example.israel.myapplication.R;
 
 import org.json.JSONArray;
@@ -33,12 +36,23 @@ public class PresenterImpl {
         this.delegate = delegate;
     }
 
-    public void send(String input) throws MalformedURLException {
-        ChatBubble sendMessage = new ChatBubble();
-        sendMessage.setContent(input);
-        sendMessage.setMyMessage(false);
-        delegate.updateChatResponse(sendMessage);
-        consultarws(input);
+    public void sendMessage(String input) {
+        simpleResponse(input, false);
+        simpleResponse("...", true);
+        if (isOnline(context))
+            sendRequest(input);
+        else {
+            delegate.deleteWait();
+            simpleResponse(context.getResources().getString(R.string.conexion), true);
+        }
+    }
+
+    public void sendRequest(String input) {
+        try {
+            consultarws(input);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void consultarws(String comentario) throws MalformedURLException {
@@ -83,9 +97,14 @@ public class PresenterImpl {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        callBack(connection);
 
+    }
+
+    private void callBack(HttpURLConnection connection) {
         try {
             if (connection.getResponseCode() == 200) {
+                delegate.deleteWait();
                 InputStream inputStream = new BufferedInputStream(connection.getInputStream());
                 BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
                 String respuesta = r.readLine();
@@ -101,23 +120,27 @@ public class PresenterImpl {
                             JSONObject simpleResponses = fulfillmentMessages1.getJSONObject("simpleResponses");
                             JSONArray simpleResponses1 = new JSONArray(simpleResponses.optJSONArray("simpleResponses").toString());
                             JSONObject textToSpeech = new JSONObject(simpleResponses1.get(0).toString());
-                            ChatBubble chatMessage = new ChatBubble();
-                            chatMessage.setContent(textToSpeech.getString("textToSpeech"));
-                            chatMessage.setMyMessage(true);
-                            delegate.updateChatResponse(chatMessage);
+                            simpleResponse(textToSpeech.getString("textToSpeech"), true);
                         }
                         //QuickResponses
-                        else if (fulfillmentMessages1.has("listSelect")) { //listButtons
+                        else if (fulfillmentMessages1.has("listSelect")) {
                             JSONObject btnResponse = fulfillmentMessages1.getJSONObject("listSelect");
                             JSONArray items = new JSONArray(btnResponse.optJSONArray("items").toString());
-                            ChatBubble chatMessage = new ChatBubble();
-                            chatMessage.setContent(btnResponse.getString("title"));
-                            chatMessage.setMyMessage(true);
-                            delegate.updateChatResponse(chatMessage);
+                            simpleResponse(btnResponse.getString("title"), true);
                             ArrayList<Object> responses = new ArrayList<>();
                             for (int j = 0; j < items.length(); j++) {
                                 JSONObject item = new JSONObject(items.get(j).toString());
                                 responses.add(new QReply(item.getString("title")));
+                            }
+                            delegate.updateChatResponse(responses);
+                        } else if (fulfillmentMessages1.has("suggestions")) {
+                            JSONObject suggestions = fulfillmentMessages1.getJSONObject("suggestions");
+                            JSONArray suggestionsArray = suggestions.getJSONArray("suggestions");
+                            ArrayList<Object> responses = new ArrayList<>();
+                            for (int k = 0; k < suggestionsArray.length(); k++) {
+                                JSONObject suggestion = new JSONObject(suggestionsArray.get(k).toString());
+                                responses.add(new QReply(suggestion.getString("title")));
+                                //simpleResponse(suggestion.getString("title"),true);
                             }
                             delegate.updateChatResponse(responses);
                         }
@@ -132,6 +155,17 @@ public class PresenterImpl {
                             }
                             delegate.updateChatResponse(responses);
                         }
+                        //videoResponse
+                        else if (fulfillmentMessages1.has("linkOutSuggestion")) {
+                            JSONObject linkResponse = fulfillmentMessages1.getJSONObject("linkOutSuggestion");
+                            String respons = linkResponse.getString("destinationName");
+                            String link = linkResponse.getString("uri");
+                            String videoLink = "<iframe width=\"100%\" height=\"80%\" src=" + "\"" + link + "\"" + " frameborder=\"0\" allowfullscreen></iframe>";
+                            simpleResponse(respons, true);
+                            VideoResponse videoResponse = new VideoResponse();
+                            videoResponse.setVideoUrl("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/Mx-XKLL6iY0\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>");
+                            delegate.updateChatResponse(videoResponse);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -143,5 +177,16 @@ public class PresenterImpl {
         }
     }
 
+    public void simpleResponse(String message, boolean myMessage) {
+        ChatBubble chatMessage = new ChatBubble();
+        chatMessage.setContent(message);
+        chatMessage.setMyMessage(myMessage);
+        delegate.updateChatResponse(chatMessage);
+    }
 
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
+    }
 }

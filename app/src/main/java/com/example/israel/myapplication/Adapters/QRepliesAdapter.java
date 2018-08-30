@@ -38,11 +38,7 @@ public class QRepliesAdapter extends RecyclerView.Adapter<QRepliesAdapter.MyView
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    presenter.consultarws(holder.btn.getText().toString());
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+                    presenter.sendMessage(holder.btn.getText().toString());
             }
         });
 

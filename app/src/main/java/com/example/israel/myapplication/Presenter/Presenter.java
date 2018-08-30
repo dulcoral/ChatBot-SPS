@@ -4,6 +4,7 @@ public interface Presenter {
     //view Chat
     interface Chat {
         void updateChatResponse(Object response);
+        void deleteWait();
 
     }
 
