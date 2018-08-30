@@ -6,11 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.example.israel.myapplication.Model.ChatBubble;
 import com.example.israel.myapplication.Model.CardResponse;
 import com.example.israel.myapplication.Model.QReply;
+import com.example.israel.myapplication.Model.VideoResponse;
 import com.example.israel.myapplication.Presenter.PresenterImpl;
 import com.example.israel.myapplication.R;
 
@@ -27,6 +30,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     private final int SIMPLEMESSAGE = 1;
     private final int CARROUSEL = 2;
     private final int BTN = 3;
+    private final int VIDEO = 4;
 
     public ChatAdapter(Context context, List<Object> items, PresenterImpl presenter) {
         this.context = context;
@@ -41,6 +45,10 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public void add(Object message) {
         items.add(message);
         notifyDataSetChanged();
+    }
+
+    public void remove() {
+        items.remove(getItemCount() - 1);
     }
 
     @Override
@@ -61,6 +69,9 @@ public class ChatAdapter extends RecyclerView.Adapter {
             case BTN:
                 view = inflater.inflate(R.layout.quick_replies, parent, false);
                 return new QRepliesViewHolder(view);
+            case VIDEO:
+                view = inflater.inflate(R.layout.video_view, parent, false);
+                return new VideoViewHolder(view);
         }
         return null;
     }
@@ -83,6 +94,10 @@ public class ChatAdapter extends RecyclerView.Adapter {
             case BTN:
                 ArrayList<QReply> qReplies = (ArrayList<QReply>) items.get(position);
                 ((QRepliesViewHolder) holder).bind(qReplies);
+                break;
+            case VIDEO:
+                VideoResponse video = (VideoResponse) items.get(position);
+                ((VideoViewHolder) holder).bind(video);
                 break;
         }
 
@@ -108,6 +123,10 @@ public class ChatAdapter extends RecyclerView.Adapter {
             } else
                 return BTN;
         }
+        if (items.get(position) instanceof VideoResponse){
+            VideoResponse videoResponse = (VideoResponse) items.get(position);
+            return VIDEO;
+        }
         return -1;
     }
 
@@ -121,7 +140,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         }
 
         public void bind(ArrayList<CardResponse> cardResponses) {
-            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses, context);
+            CarrouselAdapter adapter = new CarrouselAdapter(cardResponses, context, presenter);
             recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(adapter);
         }
@@ -154,6 +173,23 @@ public class ChatAdapter extends RecyclerView.Adapter {
             QRepliesAdapter adapter = new QRepliesAdapter(qReplies, context, presenter);
             recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(adapter);
+        }
+    }
+
+    public class VideoViewHolder extends RecyclerView.ViewHolder {
+        WebView videoWeb;
+
+        VideoViewHolder(View itemView) {
+            super(itemView);
+            videoWeb = (WebView) itemView.findViewById(R.id.videoWebView);
+        }
+
+        public void bind(VideoResponse videoResponse) {
+            videoWeb.getSettings().setJavaScriptEnabled(true);
+            videoWeb.setWebChromeClient(new WebChromeClient() {
+            });
+            videoWeb.loadData(videoResponse.getVideoUrl(), "text/html", "utf-8");
+            //videoWeb.loadUrl(videoResponse.getVideoUrl());
         }
     }
 

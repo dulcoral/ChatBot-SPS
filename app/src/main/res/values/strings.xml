@@ -12,4 +12,5 @@
     <!-- ChatRoom -->
     <string name="hintWriteHere">Escribe tu mensaje aquí </string>
     <string name="request">http://chatbotsp.herokuapp.com/api/message</string>
+    <string name="conexion">No puedo contestar ahora, por favor revisa tu conexión a internet</string>
 </resources>

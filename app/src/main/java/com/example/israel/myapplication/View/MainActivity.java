@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,14 +33,13 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
     Toolbar toolbar;
     PresenterImpl presenter;
     private ImageButton sendBtn;
+    boolean typingStarted;
     LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setElevation(4);
         toolbar.setTitle("");
@@ -60,25 +62,24 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
                 inputET.setText(""); // clear message field
                 // disable send button until retrieve success from API
                 sendBtn.setClickable(false);
-                try {
-                    presenter.send(messageText);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+                presenter.sendMessage(messageText);
             }
         });
-        adapter = new ChatAdapter(this, fromChat(),presenter);
+        adapter = new ChatAdapter(this, fromChat(), presenter);
         linearLayoutManager = new LinearLayoutManager(this);
-       // linearLayoutManager.setStackFromEnd(true);
-       // recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
         recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
             }
-        }, 300);
+        }, 100);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+        //linearLayoutManager.setStackFromEnd(true);
+
+        //recyclerView.scrollToPosition(adapter.getItemCount()-1);
+
     }
 
     public List<Object> fromChat() {
@@ -86,9 +87,15 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
         return mMessageList;
     }
 
+    @Override
     public void updateChatResponse(Object response) {
         adapter.add(response);
         sendBtn.setClickable(true);
+    }
+
+    @Override
+    public void deleteWait() {
+        adapter.remove();
     }
 
     @Override
@@ -102,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                //Realizamos el cierre de sesion en firebase y volvemos al login
+                // logout and return to login activity
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
