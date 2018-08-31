@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -33,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
     Toolbar toolbar;
     PresenterImpl presenter;
     private ImageButton sendBtn;
-    boolean typingStarted;
     LinearLayoutManager linearLayoutManager;
 
     @Override
@@ -63,23 +63,27 @@ public class MainActivity extends AppCompatActivity implements Presenter.Chat {
                 // disable send button until retrieve success from API
                 sendBtn.setClickable(false);
                 presenter.sendMessage(messageText);
+                recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
             }
         });
         adapter = new ChatAdapter(this, fromChat(), presenter);
         linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.postDelayed(new Runnable() {
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void run() {
-                recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    recyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+                        }
+                    }, 100);
+                }
             }
-        }, 100);
+        });
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        //linearLayoutManager.setStackFromEnd(true);
-
-        //recyclerView.scrollToPosition(adapter.getItemCount()-1);
-
     }
 
     public List<Object> fromChat() {

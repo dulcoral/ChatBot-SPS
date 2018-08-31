@@ -42,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
+                android:hint="@string/email"
                 app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
 
@@ -50,7 +51,6 @@
                     style="@style/StyledTilEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:textColor="@android:color/white"
                     android:textColorHint="#b6b0b1" />
@@ -75,6 +75,7 @@
                 android:layout_marginRight="15dp"
                 android:id="@+id/input_password_layout"
                 android:layout_marginTop="25dp"
+                android:hint="@string/password"
                 app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
                 app:passwordToggleEnabled="true">
 
@@ -84,7 +85,6 @@
                     style="@style/StyledTilEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password"
                     android:inputType="textPassword"
                     android:textColor="@android:color/white"
                     android:textColorHint="#b6b0b1" />

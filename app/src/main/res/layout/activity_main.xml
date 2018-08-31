@@ -31,12 +31,12 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_View"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bar"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/input_text"
         android:layout_below="@+id/toolbar" />
 
     <RelativeLayout
-        android:id="@+id/bar"
+        android:id="@+id/input_text"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

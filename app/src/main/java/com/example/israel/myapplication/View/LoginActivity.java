@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements Presenter.Login 
 
     @Override
     public void disableInputs() {
-        passwordTIL.setEnabled(false);
+        passwordTIL.getEditText().setEnabled(false);
         emailET.setEnabled(false);
         loginB.setEnabled(false);
     }
@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements Presenter.Login 
 
     @Override
     public void enableInputs() {
-        passwordTIL.setEnabled(true);
+        passwordTIL.getEditText().setEnabled(true);
         emailET.setEnabled(true);
         loginB.setEnabled(true);
     }
